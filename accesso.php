@@ -87,6 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['bottone_submit_codice_
                         $_SESSION["codice_2fa"] = generaCodice2FA();
                         $mostra_form_login = false;
                         $mostra_form_2fa = true;
+                        
 
                     } else {
                         $messaggio_login = "Credenziali non valide (password errata).";
@@ -151,24 +152,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['bottone_submit_codice_
         <?php endif; ?>
 
         <?php if ($mostra_form_login): ?>
-            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
-                <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="username_html_id" name="username"
-                        placeholder="Username o E-mail"
-                        value="<?php echo htmlspecialchars($valore_username_ripopolamento); ?>" required>
-                    <label for="username_html_id">Username/E-mail</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input type="password" class="form-control" id="password_html_id" name="password" placeholder="Password"
-                        required>
-                    <label for="password_html_id">Password</label>
-                </div>
-                <button class="btn btn-primary w-100 py-2 mb-3" type="submit">Continua</button>
-                <div class="text-center">
-                    <small><a href="dimenticata.html" class="form-text d-block mb-1">Password dimenticata?</a></small>
-                    <small><a href="crea.html" class="form-text d-block">Creare un nuovo account?</a></small>
-                </div>
-            </form>
+            readfile('index.html');
         <?php endif; ?>
 
         <?php if ($mostra_form_2fa): ?>
