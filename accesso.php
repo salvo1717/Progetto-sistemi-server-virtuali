@@ -84,6 +84,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['bottone_submit_codice_
                         $_SESSION['username'] = $utente_trovato['username'];
                         $_SESSION['nome'] = $utente_trovato['nome'];
                         $_SESSION["email"] = $utente_trovato['email'];
+                        $_SESSION["codice_2fa"] = generaCodice2FA();
+                        $mostra_form_login = false;
+                        $mostra_form_2fa = true;
 
                     } else {
                         $messaggio_login = "Credenziali non valide (password errata).";
