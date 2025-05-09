@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap');
+h1{
+    font-size: 450%;
+    text-align: center;
+    font-family: "Cal Sans", sans-serif;
+}
+html{
+    background-color: white;
+}
+.container{
+    background-color: aliceblue;
+    border-radius: 1.7%;
+    width: 100%;
+}
+form>div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+form>div>label{
+    font-size: 150%;
+    font-family: "Cal Sans", sans-serif;
+}
+form>div>p{
+    font-size: 90%;
+    font-family: "Cal Sans", sans-serif;
+    color: #0d6efd;
+    cursor: pointer;
+}
