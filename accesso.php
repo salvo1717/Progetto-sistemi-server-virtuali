@@ -137,10 +137,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['bottone_submit_codice_
 </head>
 
 <body>
-    <div class="container">
-        <h1 class="display-5 mb-4">
+    <h1 class="display-5 mb-4">
             <?php echo $mostra_form_2fa ? "Verifica Codice" : "Login"; ?>
-        </h1>
+    </h1>
+    <div class="container">
+        
 
         <?php if (!empty($messaggio_output)): ?>
             <div class="alert <?php
@@ -161,15 +162,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['bottone_submit_codice_
 
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
                 <div class="mb-3">
+                    <label for="username_html_id">Username/E-mail</label>
                     <input type="text" class="form-control" id="username_html_id" name="username"
                         placeholder="Username o E-mail"
                         value="<?php echo htmlspecialchars($valore_username_ripopolamento); ?>" required>
-                    <label for="username_html_id">Username/E-mail</label>
+                    
                 </div>
                 <div class="mb-3">
+                    <label for="password_html_id">Password</label>
                     <input type="password" class="form-control" id="password_html_id" name="password" placeholder="Password"
                         required>
-                    <label for="password_html_id">Password</label>
                 </div>
                 <button class="btn btn-primary w-100 py-2 mb-3" type="submit">Continua</button>
                 <div class="text-center">
@@ -182,10 +184,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['bottone_submit_codice_
         <?php if ($mostra_form_2fa):?>
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
                 <div class="mb-3">
+                    <label for="codice_2fa_input_id">Codice di Verifica</label>
                     <input type="text" class="form-control" id="codice_2fa_input_id" name="codice_2fa_input_utente"
                         placeholder="Codice" inputmode="text" pattern="[0-9a-zA-Z]{6}"
-                        title="Inserisci il codice a 6 caratteri" required autofocus>
-                    <label for="codice_2fa_input_id">Codice di Verifica</label>
+                        title="Inserisci il codice a 6 caratteri" required autofocus> 
                 </div>
                 <button class="btn btn-success w-100 py-2" type="submit" name="bottone_submit_codice_2fa">Verifica
                     Codice</button>
