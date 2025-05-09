@@ -6,7 +6,10 @@ error_reporting(E_ALL);
 $percorso = __DIR__ . '/utenti.json';
 $messaggio_login = "";
 $login_successo = false;
-
+$mostra_form_login = true;
+$mostra_form_2fa = false;
+$valore_username_ripopolamento = "";
+$messaggio_output = "";
 function generaCodice2FA($lunghezza = 6)
 {
     $caratteri = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
