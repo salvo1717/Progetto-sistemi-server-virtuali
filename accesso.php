@@ -151,7 +151,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['bottone_submit_codice_
             </div>
         <?php endif; ?>
 
-        <?php if ($mostra_form_login): ?>
+        <?php if ($mostra_form_login):?>
+            
+
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control" id="username_html_id" name="username"
@@ -172,7 +174,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['bottone_submit_codice_
             </form>
         <?php endif; ?>
 
-        <?php if ($mostra_form_2fa): ?>
+        <?php if ($mostra_form_2fa): 
+            $additional_container_class = '';
+            $additional_container_class = 'container-2fa-narrow';    
+        ?>
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control" id="codice_2fa_input_id" name="codice_2fa_input_utente"
