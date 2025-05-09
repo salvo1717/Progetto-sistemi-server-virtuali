@@ -87,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['bottone_submit_codice_
                         $_SESSION["codice_2fa"] = generaCodice2FA();
                         $mostra_form_login = false;
                         $mostra_form_2fa = true;
-                        
+
 
                     } else {
                         $messaggio_login = "Credenziali non valide (password errata).";
@@ -129,96 +129,93 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['bottone_submit_codice_
             box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
             text-align: center;
         }
+
         .title-wrapper {
-        width: 100%;
-        text-align: center;
-        padding-top: 2rem;
-        padding-bottom: 1rem; 
-        flex-shrink: 0; 
-    }
+            width: 100%;
+            text-align: center;
+            padding-top: 2rem;
+            padding-bottom: 1rem;
+            flex-shrink: 0;
+        }
 
-    .form-content-wrapper {
-        display: flex; 
-        flex-direction: column; 
-        justify-content: center; 
-        align-items: center; 
-        flex-grow: 1;
-        width: 100%;
-        overflow-y: auto; 
-        padding: 1rem; 
-    }
-
+        .form-content-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            width: 100%;
+            overflow-y: auto;
+            padding: 1rem;
+        }
     </style>
 </head>
 
 <body>
-    <div class="container-fluid text-center">
-        <div class="mt-3">
-            <h1 class="display-5 mb-4">
+    <div class="title-wrapper">
+        <h1 class="display-5 mb-0"> {/* Tolto mb-4 dall'h1, lo gestisce il padding del wrapper */}
             <?php echo $mostra_form_2fa ? "Verifica Codice" : "Login"; ?>
-            </h1>
-        </div>
+        </h1>
     </div>
-    <div class="container">
-        
 
-        <?php if (!empty($messaggio_output)): ?>
-            <div class="alert <?php
-            $classe_alert = 'alert-info';
-            if (str_contains(strtolower($messaggio_output), 'errore') || str_contains(strtolower($messaggio_output), 'non valide') || str_contains(strtolower($messaggio_output), 'errato') || str_contains(strtolower($messaggio_output), 'obbligatori') || str_contains(strtolower($messaggio_output), 'scadut')) {
-                $classe_alert = 'alert-danger';
-            } elseif (str_contains(strtolower($messaggio_output), 'abbiamo inviato') || str_contains(strtolower($messaggio_output), 'successo')) {
-                $classe_alert = 'alert-success';
-            }
-            echo $classe_alert;
-            ?>" role="alert">
-                <?php echo htmlspecialchars($messaggio_output); ?>
+    <div class="form-content-wrapper">
+        <div class="container <?php echo htmlspecialchars($additional_container_class); ?>"> {/* Questo .container di
+            Bootstrap gestisce la max-width */}
+            <div class="form-box-container"> {/* Questo div interno avrà lo sfondo aliceblue e il padding */}
+
+                <?php if (!empty($messaggio_output)): ?>
+                    <div class="alert <?php /* ... logica classe alert ... */ echo $classe_alert; ?>" role="alert">
+                        <?php echo htmlspecialchars($messaggio_output); ?>
+                    </div>
+                <?php elseif (!empty($messaggio_login) && !$login_successo && !$mostra_form_2fa): ?>
+                    <div class="alert alert-danger" role="alert">
+                        <?php echo htmlspecialchars($messaggio_login); ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($mostra_form_login): ?>
+                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+                        <div class="mb-3">
+                            <label for="username_html_id">Username/E-mail</label>
+                            <input type="text" class="form-control" id="username_html_id" name="username"
+                                placeholder="Username o E-mail"
+                                value="<?php echo htmlspecialchars($valore_username_ripopolamento); ?>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password_html_id">Password</label>
+                            <input type="password" class="form-control" id="password_html_id" name="password"
+                                placeholder="Password" required>
+                        </div>
+                        <button class="btn btn-primary w-100 py-2 mb-3" type="submit">Continua</button>
+                        <div class="text-center">
+                            <small><a href="dimenticata.html" class="form-text d-block mb-1">Password
+                                    dimenticata?</a></small>
+                            <small><a href="crea.html" class="form-text d-block">Creare un nuovo account?</a></small>
+                        </div>
+                    </form>
+                <?php endif; ?>
+
+                <?php if ($mostra_form_2fa): ?>
+                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+                        <div class="mb-3">
+                            <label for="codice_2fa_input_id">Codice di Verifica</label>
+                            <input type="text" class="form-control" id="codice_2fa_input_id" name="codice_2fa_input_utente"
+                                placeholder="Codice" inputmode="text" pattern="[0-9a-zA-Z]{6}"
+                                title="Inserisci il codice a 6 caratteri" required autofocus>
+                        </div>
+                        <button class="btn btn-success w-100 py-2" type="submit" name="bottone_submit_codice_2fa">Verifica
+                            Codice</button>
+                        <div class="text-center mt-3">
+                            <small><a
+                                    href="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?messaggio=Login annullato.&reset_2fa=1"
+                                    class="text-muted">Annulla e torna al login</a></small>
+                        </div>
+                    </form>
+                <?php endif; ?>
+
+                <p class="mt-4 mb-3 text-body-secondary text-center">&copy; <?php echo date("Y"); ?></p>
             </div>
-        <?php endif; ?>
-
-        <?php if ($mostra_form_login):?>
-            
-
-            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
-                <div class="mb-3">
-                    <label for="username_html_id">Username/E-mail</label>
-                    <input type="text" class="form-control" id="username_html_id" name="username"
-                        placeholder="Username o E-mail"
-                        value="<?php echo htmlspecialchars($valore_username_ripopolamento); ?>" required>
-                    
-                </div>
-                <div class="mb-3">
-                    <label for="password_html_id">Password</label>
-                    <input type="password" class="form-control" id="password_html_id" name="password" placeholder="Password"
-                        required>
-                </div>
-                <button class="btn btn-primary w-100 py-2 mb-3" type="submit">Continua</button>
-                <div class="text-center">
-                    <small><a href="dimenticata.html" class="form-text d-block mb-1">Password dimenticata?</a></small>
-                    <small><a href="crea.html" class="form-text d-block">Creare un nuovo account?</a></small>
-                </div>
-            </form>
-        <?php endif; ?>
-
-        <?php if ($mostra_form_2fa):?>
-            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
-                <div class="mb-3">
-                    <label for="codice_2fa_input_id">Codice di Verifica</label>
-                    <input type="text" class="form-control" id="codice_2fa_input_id" name="codice_2fa_input_utente"
-                        placeholder="Codice" inputmode="text" pattern="[0-9a-zA-Z]{6}"
-                        title="Inserisci il codice a 6 caratteri" required autofocus> 
-                </div>
-                <button class="btn btn-success w-100 py-2" type="submit" name="bottone_submit_codice_2fa">Verifica
-                    Codice</button>
-                <div class="text-center mt-3">
-                    <small><a
-                            href="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?messaggio=Login annullato.&reset_2fa=1"
-                            class="text-muted">Annulla e torna al login</a></small>
-                </div>
-            </form>
-        <?php endif; ?>
-
-        <p class="mt-4 mb-3 text-body-secondary text-center">&copy; <?php echo date("Y"); ?></p>
+        </div>
     </div>
 </body>
 
