@@ -87,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['bottone_submit_codice_
                         $_SESSION["codice_2fa"] = generaCodice2FA();
                         $mostra_form_login = false;
                         $mostra_form_2fa = true;
-
+                        
 
                     } else {
                         $messaggio_login = "Credenziali non valide (password errata).";
@@ -129,46 +129,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['bottone_submit_codice_
             box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
             text-align: center;
         }
-
         .title-wrapper {
-            width: 100%;
-            text-align: center;
-            padding-top: 2rem;
-            padding-bottom: 1rem;
-            flex-shrink: 0;
-        }
+        width: 100%;
+        text-align: center;
+        padding-top: 2rem;
+        padding-bottom: 1rem; 
+        flex-shrink: 0; 
+    }
 
-        .form-content-wrapper {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            flex-grow: 1;
-            width: 100%;
-            overflow-y: auto;
-            padding: 1rem;
-        }
+    .form-content-wrapper {
+        display: flex; 
+        flex-direction: column; 
+        justify-content: center; 
+        align-items: center; 
+        flex-grow: 1;
+        width: 100%;
+        overflow-y: auto; 
+        padding: 1rem; 
+    }
+
     </style>
 </head>
 
 <body>
-    <div class="title-wrapper">
-        <h1 class="display-5 mb-0"> {/* Tolto mb-4 dall'h1, lo gestisce il padding del wrapper */}
+   <div class="title-wrapper">
+        <h1 class="display-5 mb-0">
             <?php echo $mostra_form_2fa ? "Verifica Codice" : "Login"; ?>
         </h1>
     </div>
 
     <div class="form-content-wrapper">
-        <div class="container <?php echo htmlspecialchars($additional_container_class); ?>"> {/* Questo .container di
-            Bootstrap gestisce la max-width */}
-            <div class="form-box-container"> {/* Questo div interno avrà lo sfondo aliceblue e il padding */}
-
+        <div class="container <?php echo htmlspecialchars($additional_container_class); ?>"> 
+            <div class="form-box-container">
+                
                 <?php if (!empty($messaggio_output)): ?>
-                    <div class="alert <?php /* ... logica classe alert ... */ echo $classe_alert; ?>" role="alert">
+                    <div class="alert <?php  echo $classe_alert; ?>" role="alert">
                         <?php echo htmlspecialchars($messaggio_output); ?>
                     </div>
                 <?php elseif (!empty($messaggio_login) && !$login_successo && !$mostra_form_2fa): ?>
-                    <div class="alert alert-danger" role="alert">
+                     <div class="alert alert-danger" role="alert">
                         <?php echo htmlspecialchars($messaggio_login); ?>
                     </div>
                 <?php endif; ?>
@@ -183,13 +182,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['bottone_submit_codice_
                         </div>
                         <div class="mb-3">
                             <label for="password_html_id">Password</label>
-                            <input type="password" class="form-control" id="password_html_id" name="password"
-                                placeholder="Password" required>
+                            <input type="password" class="form-control" id="password_html_id" name="password" placeholder="Password"
+                                required>
                         </div>
                         <button class="btn btn-primary w-100 py-2 mb-3" type="submit">Continua</button>
                         <div class="text-center">
-                            <small><a href="dimenticata.html" class="form-text d-block mb-1">Password
-                                    dimenticata?</a></small>
+                            <small><a href="dimenticata.html" class="form-text d-block mb-1">Password dimenticata?</a></small>
                             <small><a href="crea.html" class="form-text d-block">Creare un nuovo account?</a></small>
                         </div>
                     </form>
@@ -201,7 +199,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['bottone_submit_codice_
                             <label for="codice_2fa_input_id">Codice di Verifica</label>
                             <input type="text" class="form-control" id="codice_2fa_input_id" name="codice_2fa_input_utente"
                                 placeholder="Codice" inputmode="text" pattern="[0-9a-zA-Z]{6}"
-                                title="Inserisci il codice a 6 caratteri" required autofocus>
+                                title="Inserisci il codice a 6 caratteri" required autofocus> 
                         </div>
                         <button class="btn btn-success w-100 py-2" type="submit" name="bottone_submit_codice_2fa">Verifica
                             Codice</button>
