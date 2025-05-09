@@ -88,7 +88,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['bottone_submit_codice_
                         $mostra_form_login = false;
                         $mostra_form_2fa = true;
 
-                        
+                        error_log("PHP: Tentativo invio 2FA. Codice: " . $_SESSION["codice_2fa"] . ", Email: " . $_SESSION["email"]);
+                        $codice_da_inviare = $_SESSION["codice_2fa"];
+                        $email_destinatario = $_SESSION["email"];
+                        $oggetto_email = 'Codice di verifica';
                         $email_destinatario_escaped = escapeshellarg($email_destinatario);
                         $oggetto_email_escaped = escapeshellarg($oggetto_email);
                         $corpo_email_content = "codice_2fa: " . $codice_da_inviare;
