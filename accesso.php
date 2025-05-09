@@ -129,11 +129,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['bottone_submit_codice_
             box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
             text-align: center;
         }
-        .container.container-2fa-narrow {
-                max-width: 30%;
+        .title-wrapper {
+        width: 100%;
+        text-align: center;
+        padding-top: 2rem;
+        padding-bottom: 1rem; 
+        flex-shrink: 0; 
+    }
 
-            
-        }
+    .form-content-wrapper {
+        display: flex; 
+        flex-direction: column; 
+        justify-content: center; 
+        align-items: center; 
+        flex-grow: 1;
+        width: 100%;
+        overflow-y: auto; 
+        padding: 1rem; 
+    }
+
     </style>
 </head>
 
