@@ -119,6 +119,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['bottone_submit_codice_
             justify-content: center;
             min-height: 100vh;
             background-color: #f8f9fa;
+            flex-direction: column;
         }
 
         .message-container {
