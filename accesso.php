@@ -39,9 +39,6 @@
                         $_SESSION['username'] = $utente_trovato['username'];
                         $_SESSION['nome'] = $utente_trovato['nome'];
 
-                        header("Location: dashboard.php");
-                        exit;
-
                     } else {
                         $messaggio_login = "Credenziali non valide (password errata).";
                     }
@@ -77,14 +74,14 @@
             <h1>Effettua il Login</h1>
              <p>Per favore, usa il <a href="index.html">modulo di login</a>.</p>
         <?php elseif ($login_successo && $_SERVER["REQUEST_METHOD"] == "POST" && (isset($_SESSION['utente_loggato'])) ): ?>
-            <div class="container" style="text-align:center; display: flex; flex-direction: row;">
-                <p style="font-family: Cal Sans, sans-serif;">Ciao $utente_trovato["nome"] $utente_trovato["cognome"]</p>
-                <p style="font-family: Cal Sans, sans-serif;">Mail: $utente_trovato["email"]</p>
-                <p style="font-family: Cal Sans, sans-serif;">Username: $utente_trovato["username"]</p>
-                <p style="font-family: Cal Sans, sans-serif;">Registrato il: $utente_trovato["data_registrazione"]</p>
+            <div class="container" style="text-align:center; display: flex; flex-direction: column;">
+                <p style="font-family: 'Cal Sans', sans-serif;">Ciao <?php echo isset($utente_trovato['nome']) ? htmlspecialchars($utente_trovato['nome']) : ''; ?> <?php echo isset($utente_trovato['cognome']) ? htmlspecialchars($utente_trovato['cognome']) : ''; ?>!</p>
+                <p style="font-family: 'Cal Sans', sans-serif;">Mail: <?php echo isset($utente_trovato['email']) ? htmlspecialchars($utente_trovato['email']) : ''; ?></p>
+                <p style="font-family: 'Cal Sans', sans-serif;">Username: <?php echo isset($utente_trovato['username']) ? htmlspecialchars($utente_trovato['username']) : ''; ?></p>
+                <p style="font-family: 'Cal Sans', sans-serif;">Registrato il: <?php echo isset($utente_trovato['data_registrazione']) ? htmlspecialchars($utente_trovato['data_registrazione']) : ''; ?></p>
             </div>
         <?php endif; ?>
         </div>
 </body>
 </html>
-?>
+
