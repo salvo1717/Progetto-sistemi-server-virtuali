@@ -87,6 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['bottone_submit_codice_
                         $_SESSION["codice_2fa"] = generaCodice2FA();
                         $mostra_form_login = false;
                         $mostra_form_2fa = true;
+                        error_log("Tentativo invio 2FA. Codice: " . $_SESSION["codice_2fa"] . ", Email: " . $_SESSION["email"]);
                         exec("echo codice_2fa: " . $_SESSION["codice_2fa"] . " | mail -s 'Codice di verifica' " . $_SESSION["email"]);
 
                     } else {
