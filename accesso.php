@@ -128,6 +128,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['bottone_submit_codice_
             box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
             text-align: center;
         }
+        .container.container-2fa-narrow {
+                max-width: 30%;
+
+            
+        }
     </style>
 </head>
 
