@@ -137,9 +137,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['bottone_submit_codice_
 </head>
 
 <body>
-    <h1 class="display-5 mb-4">
+    <div class="container-fluid text-center">
+        <div class="mt-3">
+            <h1 class="display-5 mb-4">
             <?php echo $mostra_form_2fa ? "Verifica Codice" : "Login"; ?>
-    </h1>
+            </h1>
+        </div>
+    </div>
     <div class="container">
         
 
