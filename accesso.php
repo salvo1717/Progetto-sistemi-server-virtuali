@@ -160,13 +160,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['bottone_submit_codice_
             
 
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
-                <div class="form-floating mb-3">
+                <div class="mb-3">
                     <input type="text" class="form-control" id="username_html_id" name="username"
                         placeholder="Username o E-mail"
                         value="<?php echo htmlspecialchars($valore_username_ripopolamento); ?>" required>
                     <label for="username_html_id">Username/E-mail</label>
                 </div>
-                <div class="form-floating mb-3">
+                <div class="mb-3">
                     <input type="password" class="form-control" id="password_html_id" name="password" placeholder="Password"
                         required>
                     <label for="password_html_id">Password</label>
@@ -179,12 +179,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['bottone_submit_codice_
             </form>
         <?php endif; ?>
 
-        <?php if ($mostra_form_2fa): 
-            $additional_container_class = '';
-            $additional_container_class = 'container-2fa-narrow';    
-        ?>
+        <?php if ($mostra_form_2fa):?>
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
-                <div class="form-floating mb-3">
+                <div class="mb-3">
                     <input type="text" class="form-control" id="codice_2fa_input_id" name="codice_2fa_input_utente"
                         placeholder="Codice" inputmode="text" pattern="[0-9a-zA-Z]{6}"
                         title="Inserisci il codice a 6 caratteri" required autofocus>
