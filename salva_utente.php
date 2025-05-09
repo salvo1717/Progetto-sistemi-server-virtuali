@@ -2,7 +2,7 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-$percorso = __DIR__ . '/data/utenti.json';
+$percorso = __DIR__ . '/utenti.json';
 $messaggio_utente = "";
 $successo = false;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -26,8 +26,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             "data_registrazione" => date("Y-m-d H:i:s")
         ];
         $utenti_esistenti = [];
-        if (file_exists($file_path) && filesize($file_path) > 0) {
-            $contenuto_json_esistente = file_get_contents($file_path);
+        if (file_exists($percorso) && filesize($percorso) > 0) {
+            $contenuto_json_esistente = file_get_contents($percorso);
             $utenti_esistenti = json_decode($contenuto_json_esistente, true);
             if ($utenti_esistenti === null) {
                 $utenti_esistenti = [];
@@ -45,12 +45,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $utenti_esistenti[] = $nuovo_utente;
         }
         $json_da_scrivere = json_encode($utenti_esistenti, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        if (file_put_contents($file_path, $json_da_scrivere)) {
+        if (file_put_contents($percorso, $json_da_scrivere)) {
             $messaggio_utente = "Account creato con successo!";
             $successo = true;
         } else {
             $messaggio_utente = "Errore del server: Impossibile salvare i dati. Verifica i permessi della directory 'data' e del file.";
-            error_log("Errore scrittura file JSON: " . $file_path);
+            error_log("Errore scrittura file JSON: " . $percorso);
         }
     }
 }
