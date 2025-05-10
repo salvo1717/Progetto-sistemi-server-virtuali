@@ -94,7 +94,7 @@ if (isset($_POST['bottone_submit_codice_2fa'])) {
 
                 if ($utente_trovato) {
                     if (isset($utente_trovato['password']) && password_verify($password_inserita, $utente_trovato['password'])) {
-                        $login_successo = true; 
+                        $login_successo = true;
 
 
                         $_SESSION['2fa_dati_utente_per_login'] = $utente_trovato;
@@ -105,20 +105,19 @@ if (isset($_POST['bottone_submit_codice_2fa'])) {
                         $messaggio_output = "È stato inviato un codice di verifica all'indirizzo email: " . htmlspecialchars($utente_trovato['email']) . ". Inseriscilo qui sotto.";
                         $classe_alert = "alert-info";
 
-                        
+
                         $email_destinatario = $utente_trovato['email'];
                         $email_soggetto = "Il tuo codice di verifica 2FA";
                         $email_corpo = "Ciao " . htmlspecialchars($utente_trovato['nome']) . ",\n\n"
-                                     . "Il tuo codice di verifica è: " . $_SESSION['2fa_codice_salvato_in_sessione'] . "\n\n"
-                                     . "Il codice scadrà tra 5 minuti.\n\n"
-                                     . "Se non hai richiesto tu questo codice, puoi ignorare questa email.";
-                        $email_headers = "From: noreply@tuodominio.com\r\n" .
-                                         "Reply-To: noreply@tuodominio.com\r\n" .
-                                         "X-Mailer: PHP/" . phpversion();
+                            . "Il tuo codice di verifica è: " . $_SESSION['2fa_codice_salvato_in_sessione'] . "\n\n"
+                            . "Se non hai richiesto tu questo codice, puoi ignorare questa email.";
+                        $email_headers = "From: noreply@salvo17.com\r\n" .
+                            "Reply-To: noreply@salvo17.com\r\n" .
+                            "X-Mailer: PHP/" . phpversion();
 
                         if (!mail($email_destinatario, $email_soggetto, $email_corpo, $email_headers)) {
-                             error_log("Invio email 2FA fallito per: " . $email_destinatario);
-                             $messaggio_output .= " (Invio email fallito. Codice per test: " . $_SESSION['2fa_codice_salvato_in_sessione'] . ")";
+                            error_log("Invio email 2FA fallito per: " . $email_destinatario);
+                            $messaggio_output .= " (Invio email fallito.)";
                         }
 
                     } else {
@@ -147,21 +146,51 @@ if (isset($_GET['reset_2fa']) && $_GET['reset_2fa'] == '1') {
 ?>
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $mostra_form_2fa ? "Verifica Codice 2FA" : "Login"; ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="index.css"> <style>
-        body { display: flex; flex-direction: column; align-items: center; min-height: 100vh; background-color: #f8f9fa; padding-top: 1rem; }
-        .title-wrapper { width: 100%; text-align: center; margin-bottom: 1rem; }
-        .form-box-container { padding: 2rem; background-color: white; border-radius: .5rem; box-shadow: 0 .5rem 1rem rgba(0,0,0,.15); width: 100%; max-width: 450px; margin-bottom:1rem;}
-        .alert { width: 100%; max-width: 450px; }
+    <link rel="stylesheet" href="index.css">
+    <style>
+        .title-wrapper {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+
+        .form-box-container {
+            padding: 2rem;
+            background-color: white;
+            border-radius: .5rem;
+            box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
+            width: 100%;
+            max-width: 450px;
+            margin-bottom: 1rem;
+        }
+
+        .alert {
+            width: 100%;
+            max-width: 450px;
+        }
     </style>
 </head>
+
 <body>
-   <div class="title-wrapper">
-        <h1 class="display-5">
+    <div class="title-wrapper align-items-center">
+        <h1 class="display-5 align-items-center">
             <?php echo $mostra_form_2fa ? "Verifica Codice 2FA" : "Login"; ?>
         </h1>
     </div>
@@ -171,48 +200,60 @@ if (isset($_GET['reset_2fa']) && $_GET['reset_2fa'] == '1') {
             <?php echo htmlspecialchars($messaggio_output); ?>
         </div>
     <?php elseif (!empty($messaggio_login) && $mostra_form_login): ?>
-         <div class="alert alert-danger" role="alert">
+        <div class="alert alert-danger" role="alert">
             <?php echo htmlspecialchars($messaggio_login); ?>
         </div>
     <?php endif; ?>
 
-    <div class="form-box-container">
-        <?php if ($mostra_form_login): ?>
-            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
-                <div class="mb-3">
-                    <label for="username_html_id" class="form-label">Username/E-mail</label>
-                    <input type="text" class="form-control" id="username_html_id" name="username"
-                           placeholder="Username o E-mail"
-                           value="<?php echo htmlspecialchars($valore_username_ripopolamento); ?>" required>
-                </div>
-                <div class="mb-3">
-                    <label for="password_html_id" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password_html_id" name="password" placeholder="Password" required>
-                </div>
-                <button class="btn btn-primary w-100 py-2 mb-3" type="submit">Continua</button>
-                <div class="text-center">
-                    <small><a href="dimenticata.html" class="form-text d-block mb-1">Password dimenticata?</a></small>
-                    <small><a href="crea.html" class="form-text d-block">Creare un nuovo account?</a></small>
-                </div>
-            </form>
-        <?php endif; ?>
 
-        <?php if ($mostra_form_2fa): ?>
+    <?php if ($mostra_form_login): ?>
+        <div class="d-flex align-items-center min-vh-100">
+            <div class="container">
+                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+                    <div class="mb-3">
+                        <label for="username_html_id" class="form-label">Username/E-mail</label>
+                        <input type="text" class="form-control" id="username_html_id" name="username"
+                            placeholder="Username o E-mail"
+                            value="<?php echo htmlspecialchars($valore_username_ripopolamento); ?>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password_html_id" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password_html_id" name="password"
+                            placeholder="Password" required>
+                    </div>
+                    <button class="btn btn-primary w-100 py-2 mb-3" type="submit">Continua</button>
+                    <div class="text-center">
+                        <small><a href="dimenticata.html" class="form-text d-block mb-1">Password dimenticata?</a></small>
+                        <small><a href="crea.html" class="form-text d-block">Creare un nuovo account?</a></small>
+                    </div>
+                    <p class="mt-auto mb-3 text-body-secondary text-center">&copy; <?php echo date("Y"); ?></p>
+                </form>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($mostra_form_2fa): ?>
+        <div class="form-box-container <?php echo $form_box_dynamic_class; ?>">
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
                 <div class="mb-3">
                     <label for="codice_2fa_input_id" class="form-label">Codice di Verifica</label>
                     <input type="text" class="form-control" id="codice_2fa_input_id" name="codice_2fa_input_utente"
-                           placeholder="Codice a 6 caratteri" inputmode="text" pattern="[0-9a-zA-Z]{6}"
-                           title="Inserisci il codice a 6 caratteri ricevuto via email" required autofocus>
+                        placeholder="Codice a 6 caratteri" inputmode="text" pattern="[0-9a-zA-Z]{6}"
+                        title="Inserisci il codice a 6 caratteri ricevuto via email" required autofocus>
                 </div>
-                <button class="btn btn-success w-100 py-2" type="submit" name="bottone_submit_codice_2fa">Verifica Codice</button>
+                <button class="btn btn-success w-100 py-2" type="submit" name="bottone_submit_codice_2fa">Verifica
+                    Codice</button>
                 <div class="text-center mt-3">
-                     <small><a href="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?reset_2fa=1&messaggio=Login+annullato."
-                              class="text-muted">Annulla e torna al login</a></small>
+                    <small><a
+                            href="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?reset_2fa=1&messaggio=Login+annullato."
+                            class="text-muted">Annulla e torna al login</a></small>
                 </div>
+                <p class="text-center mt-4 text-body-secondary">&copy; <?php echo date("Y"); ?></p>
             </form>
-        <?php endif; ?>
-    </div>
-    <p class="mt-auto mb-3 text-body-secondary text-center">&copy; <?php echo date("Y"); ?></p>
+
+        </div>
+    <?php endif; ?>
+
 </body>
+
 </html>
