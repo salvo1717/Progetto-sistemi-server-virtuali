@@ -157,12 +157,18 @@ if (isset($_GET['reset_2fa']) && $_GET['reset_2fa'] == '1') {
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="index.css">
         <style>
+            @import url('https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap');
             .title-wrapper {
                 width: 100%;
                 text-align: center;
                 margin-bottom: 1rem;
             }
-
+            a{
+                font-size: 90%;
+                font-family: "Cal Sans", sans-serif;
+                color: #0d6efd;
+                cursor: pointer;
+            }
             #contenitore {
                 display: flex;
                 flex-direction: column;
@@ -219,7 +225,7 @@ if (isset($_GET['reset_2fa']) && $_GET['reset_2fa'] == '1') {
                     </div>
                     <button class="btn btn-primary w-100 py-2 mb-3" type="submit">Continua</button>
                     <div class="text-center">
-                        <small><a href="dimenticata.html" class="form-text d-block mb-1">Password dimenticata?</a></small>
+                        <small><a href="dimenticata.php" class="form-text d-block mb-1">Password dimenticata?</a></small>
                         <small><a href="crea.html" class="form-text d-block">Creare un nuovo account?</a></small>
                     </div>
                     <p class="mt-auto mb-3 text-body-secondary text-center">&copy; <?php echo date("Y"); ?></p>
@@ -244,12 +250,18 @@ if (isset($_GET['reset_2fa']) && $_GET['reset_2fa'] == '1') {
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="index.css">
         <style>
+            @import url('https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap');
             .title-wrapper {
                 width: 100%;
                 text-align: center;
                 margin-bottom: 1rem;
             }
-
+            a{
+                font-size: 90%;
+                font-family: "Cal Sans", sans-serif;
+                color: #0d6efd;
+                cursor: pointer;
+            }
             .form-box-container {
                 padding: 2rem;
                 background-color: white;

@@ -139,6 +139,7 @@ if (!$mostra_form_email && !$mostra_form_codice &&
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="index.css">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap');
         body {
             display: flex;
             flex-direction: column;
@@ -164,6 +165,12 @@ if (!$mostra_form_email && !$mostra_form_codice &&
             text-align: center;
             max-width: 500px;
             width: 100%;
+        }
+        a{
+                font-size: 90%;
+                font-family: "Cal Sans", sans-serif;
+                color: #0d6efd;
+                cursor: pointer;
         }
     </style>
 </head>
