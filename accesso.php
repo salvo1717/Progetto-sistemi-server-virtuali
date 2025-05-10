@@ -70,7 +70,7 @@ if (isset($_POST['bottone_submit_codice_2fa'])) {
 } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username_o_email_inserito = isset($_POST['username']) ? trim($_POST['username']) : '';
     $password_inserita = isset($_POST['password']) ? $_POST['password'] : '';
-    $valore_username_ripopolamento = $username_o_email_inserito; // Per ripopolare il campo
+    $valore_username_ripopolamento = $username_o_email_inserito;
 
     if (empty($username_o_email_inserito) || empty($password_inserita)) {
         $messaggio_login = "Username/Email e Password sono obbligatori.";
