@@ -7,6 +7,10 @@ error_reporting(E_ALL);
 $percorso_utenti = __DIR__ . '/utenti.json';
 $messaggio_utente = "";
 $tipo_messaggio = "danger";
+$mostra_form_email = true;
+$mostra_form_codice = false;
+$email_per_reset_in_sessione = isset($_SESSION['reset_email_in_corso']) ? $_SESSION['reset_email_in_corso'] : '';
+
 function generaCodiceRecupero($lunghezza = 6) {
     $caratteri = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $codice_generato = '';
@@ -15,7 +19,6 @@ function generaCodiceRecupero($lunghezza = 6) {
     }
     return $codice_generato;
 }
-
 if (isset($_POST['submit_email_reset'])) {
     $email_inserita = isset($_POST['email_reset']) ? trim($_POST['email_reset']) : '';
 
@@ -28,9 +31,9 @@ if (isset($_POST['submit_email_reset'])) {
             $utenti = json_decode($contenuto_json, true);
 
             if ($utenti !== null) {
-                foreach ($utenti as $utente) {
-                    if (isset($utente['email']) && strtolower($utente['email']) === strtolower($email_inserita)) {
-                        $utente_trovato = $utente;
+                foreach ($utenti as $utente_registrato) {
+                    if (isset($utente_registrato['email']) && strtolower($utente_registrato['email']) === strtolower($email_inserita)) {
+                        $utente_trovato = $utente_registrato;
                         break;
                     }
                 }
@@ -45,40 +48,89 @@ if (isset($_POST['submit_email_reset'])) {
 
         if ($utente_trovato) {
             $codice_recupero = generaCodiceRecupero();
-            $_SESSION['reset_email'] = $utente_trovato['email'];
-            $_SESSION['reset_codice'] = $codice_recupero;
+            $_SESSION['reset_email_in_corso'] = $utente_trovato['email'];
+            $_SESSION['reset_codice_inviato'] = $codice_recupero;
+
             $email_destinatario = $utente_trovato['email'];
             $nome_utente = isset($utente_trovato['nome']) ? $utente_trovato['nome'] : 'Utente';
-            $email_soggetto = "Codice di recupero password";
+            $email_soggetto = "Il tuo codice per il cambio password";
             $email_corpo = "Ciao " . htmlspecialchars($nome_utente) . ",\n\n"
-                         . "Hai richiesto un codice per reimpostare la tua password.\n"
-                         . "Il tuo codice di recupero è: " . $codice_recupero . "\n\n"
-                         . "Se non hai richiesto tu questo codice, puoi ignorare questa email.\n\n"; 
-
-            $email_headers = "From: noreply@salvo17.com\r\n" .
+                         . "Usa il seguente codice per procedere con il cambio della tua password:\n"
+                         . "Codice: " . $codice_recupero . "\n\n"
+                         . "Se non hai richiesto tu questo codice, puoi ignorare questa email.";
+            $email_headers = "From: noreply@salvo17.com\r\n" . 
                              "Reply-To: noreply@salvo17.com\r\n" .
                              "X-Mailer: PHP/" . phpversion();
 
             if (mail($email_destinatario, $email_soggetto, $email_corpo, $email_headers)) {
-                $messaggio_utente = "Se l'indirizzo email è registrato, riceverai un codice di recupero. Controlla la tua casella di posta (anche lo spam).";
+                $messaggio_utente = "È stato inviato un codice all'indirizzo " . htmlspecialchars($email_destinatario) . ". Inseriscilo qui sotto.";
                 $tipo_messaggio = "success";
+                $mostra_form_email = false;
+                $mostra_form_codice = true;
+                $email_per_reset_in_sessione = $email_destinatario;
             } else {
-                $messaggio_utente = "Errore nell'invio dell'email di recupero. Riprova più tardi.";
-                error_log("Invio email recupero password fallito per: " . $email_destinatario);
+                $messaggio_utente = "Errore nell'invio dell'email. Riprova più tardi.";
+                error_log("Invio email recupero (codice) fallito per: " . $email_destinatario);
             }
         } else {
-            $messaggio_utente = "Se l'indirizzo email è registrato, riceverai un codice di recupero. Controlla la tua casella di posta (anche lo spam).";
+            $messaggio_utente = "Se l'indirizzo email è registrato e valido, riceverai un codice. Controlla la tua casella di posta (anche lo spam).";
             $tipo_messaggio = "info";
+            $mostra_form_email = false;
+            $mostra_form_codice = true;
         }
     }
+} elseif (isset($_POST['submit_codice_reset'])) {
+    $codice_inserito = isset($_POST['codice_reset_input']) ? trim($_POST['codice_reset_input']) : '';
+    $email_associata_al_codice = isset($_SESSION['reset_email_in_corso']) ? $_SESSION['reset_email_in_corso'] : null;
+
+    $mostra_form_email = false;
+    $mostra_form_codice = true;
+
+    if (empty($codice_inserito)) {
+        $messaggio_utente = "Per favore, inserisci il codice ricevuto via email.";
+    } elseif (empty($email_associata_al_codice) || !isset($_SESSION['reset_codice_inviato']) || !isset($_SESSION['reset_codice_timestamp_scadenza'])) {
+        $messaggio_utente = "Sessione di reset non valida o scaduta. Richiedi un nuovo codice.";
+        $mostra_form_codice = false;
+        $mostra_form_email = true;
+        unset($_SESSION['reset_email_in_corso'], $_SESSION['reset_codice_inviato'], $_SESSION['reset_codice_timestamp_scadenza']);
+    } elseif (time() > $_SESSION['reset_codice_timestamp_scadenza']) {
+        $messaggio_utente = "Codice di verifica scaduto. Richiedi un nuovo codice.";
+        $mostra_form_codice = false;
+        $mostra_form_email = true;
+        unset($_SESSION['reset_email_in_corso'], $_SESSION['reset_codice_inviato'], $_SESSION['reset_codice_timestamp_scadenza']);
+    } elseif (strtoupper($codice_inserito) === strtoupper($_SESSION['reset_codice_inviato'])) {
+        $_SESSION['reset_codice_verificato_successo'] = true;
+        unset($_SESSION['reset_codice_inviato'], $_SESSION['reset_codice_timestamp_scadenza']);
+
+        header("Location: cambia.php");
+        exit();
+    } else {
+        $messaggio_utente = "Codice di verifica errato. Riprova.";
+    }
 }
+if (!$mostra_form_codice && isset($_SESSION['reset_email_in_corso']) && isset($_SESSION['reset_codice_inviato'])) {
+    if (time() <= $_SESSION['reset_codice_timestamp_scadenza']) {
+        $mostra_form_email = false;
+        $mostra_form_codice = true;
+        $messaggio_utente = "Inserisci il codice che ti è stato inviato all'indirizzo " . htmlspecialchars($_SESSION['reset_email_in_corso']) . ".";
+        $tipo_messaggio = "info";
+    } else {
+        $messaggio_utente = "Il codice di verifica precedente è scaduto. Richiedine uno nuovo.";
+        $tipo_messaggio = "warning";
+        unset($_SESSION['reset_email_in_corso'], $_SESSION['reset_codice_inviato'], $_SESSION['reset_codice_timestamp_scadenza']);
+        $mostra_form_email = true;
+        $mostra_form_codice = false;
+    }
+}
+
+
 ?>
 <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recupero Password</title>
+    <title>Password Dimenticata</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="index.css">
     <style>
@@ -105,23 +157,25 @@ if (isset($_POST['submit_email_reset'])) {
         }
         .alert {
             text-align: center;
+            max-width: 500px;
+            width: 100%;
         }
     </style>
 </head>
 <body>
     <div class="title-wrapper">
-        <h1 class="display-5">Recupero Password</h1>
+        <h1 class="display-5">Password Dimenticata</h1>
     </div>
 
     <?php if (!empty($messaggio_utente)): ?>
-    <div class="alert alert-<?php echo htmlspecialchars($tipo_messaggio); ?> mb-4" role="alert" style="max-width: 500px; width: 100%;">
+    <div class="alert alert-<?php echo htmlspecialchars($tipo_messaggio); ?> mb-4" role="alert">
         <?php echo htmlspecialchars($messaggio_utente); ?>
     </div>
     <?php endif; ?>
 
-    <?php if ($_SERVER["REQUEST_METHOD"] != "POST" || ($tipo_messaggio == "danger" && isset($_POST['submit_email_reset']))): ?>
+    <?php if ($mostra_form_email): ?>
     <div class="form-container">
-        <p class="mb-3 text-center">Inserisci l'indirizzo email associato al tuo account. Ti invieremo un codice per reimpostare la password.</p>
+        <p class="mb-3 text-center">Inserisci l'indirizzo email associato al tuo account.</p>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
             <div class="mb-3">
                 <label for="email_reset" class="form-label">La tua E-Mail</label>
@@ -132,12 +186,32 @@ if (isset($_POST['submit_email_reset'])) {
                 <button type="submit" name="submit_email_reset" class="btn btn-primary">Invia Codice</button>
             </div>
         </form>
+        <p class="text-center mt-3"><a href="index.html">Torna al Login</a></p>
     </div>
-    <?php elseif ($tipo_messaggio == "success" || $tipo_messaggio == "info"): ?>
-        <div class="text-center">
-            <p>Puoi tornare alla pagina di <a href="index.html">Login</a>.</p>
-        </div>
     <?php endif; ?>
+
+    <?php if ($mostra_form_codice): ?>
+    <div class="form-container">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+            <div class="mb-3">
+                <label for="codice_reset_input" class="form-label">Codice di Verifica</label>
+                <input type="text" name="codice_reset_input" id="codice_reset_input" class="form-control"
+                       placeholder="Codice a 6 caratteri" pattern="[0-9a-zA-Z]{6}" required autofocus>
+            </div>
+             <div class="d-grid">
+                <button type="submit" name="submit_codice_reset" class="btn btn-success">Verifica Codice e Procedi</button>
+            </div>
+        </form>
+        <p class="text-center mt-3"><a href="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?annulla_reset=1">Annulla e richiedi nuovo codice</a></p>
+    </div>
+    <?php endif; ?>
+
+    <?php
+    if (!$mostra_form_email && !$mostra_form_codice && $tipo_messaggio != 'danger' && !isset($_POST['submit_email_reset']) && !isset($_POST['submit_codice_reset']) ):
+    ?>
+        <p class="text-center mt-3"><a href="index.html">Torna al Login</a></p>
+    <?php endif; ?>
+
 
     <p class="mt-5 mb-3 text-body-secondary text-center">&copy; <?php echo date("Y"); ?></p>
 </body>
