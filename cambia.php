@@ -143,9 +143,6 @@ if (isset($_POST['submit_nuova_password'])) {
         <div class="text-center">
             <a href="index.html" class="btn btn-primary">Vai al Login</a>
         </div>
-        <div class="text-center">
-            <p>Si è verificato un errore. Per favore, <a href="dimenticata.php">riprova il processo di recupero password</a>.</p>
-        </div>
     <?php endif; ?>
 
     <p class="mt-5 mb-3 text-body-secondary text-center">&copy; <?php echo date("Y"); ?></p>
