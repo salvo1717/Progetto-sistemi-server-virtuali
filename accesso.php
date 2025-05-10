@@ -144,69 +144,64 @@ if (isset($_GET['reset_2fa']) && $_GET['reset_2fa'] == '1') {
 }
 
 ?>
-<!DOCTYPE html>
-<html lang="it">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $mostra_form_2fa ? "Verifica Codice 2FA" : "Login"; ?></title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="index.css">
-    <style>
-        .title-wrapper {
-            width: 100%;
-            text-align: center;
-            margin-bottom: 1rem;
-        }
+<?php if ($mostra_form_login): ?>
+    <!DOCTYPE html>
+    <html lang="it">
 
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            background-color: #f8f9fa;
-            padding-top: 1rem;
-            padding-bottom: 1rem;
-        }
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title><?php echo $mostra_form_2fa ? "Verifica Codice 2FA" : "Login"; ?></title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="index.css">
+        <style>
+            .title-wrapper {
+                width: 100%;
+                text-align: center;
+                margin-bottom: 1rem;
+            }
 
-        .form-box-container {
-            padding: 2rem;
-            background-color: white;
-            border-radius: .5rem;
-            box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
-            width: 100%;
-            max-width: 450px;
-            margin-bottom: 1rem;
-        }
+            #contenitore {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
 
-        .alert {
-            width: 100%;
-            max-width: 450px;
-        }
-    </style>
-</head>
+            .form-box-container {
+                padding: 2rem;
+                background-color: white;
+                border-radius: .5rem;
+                box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
+                width: 100%;
+                max-width: 450px;
+                margin-bottom: 1rem;
+            }
 
-<body>
-    <div class="title-wrapper align-items-center">
-        <h1 class="display-5 align-items-center">
-            <?php echo $mostra_form_2fa ? "Verifica Codice 2FA" : "Login"; ?>
-        </h1>
-    </div>
+            .alert {
+                width: 100%;
+                max-width: 450px;
+            }
+        </style>
+    </head>
 
-    <?php if (!empty($messaggio_output) && $mostra_form_2fa): ?>
-        <div class="alert <?php echo htmlspecialchars($classe_alert); ?>" role="alert">
-            <?php echo htmlspecialchars($messaggio_output); ?>
+    <body>
+        <div class="title-wrapper align-items-center">
+            <h1 class="display-5 align-items-center">
+                <?php echo $mostra_form_2fa ? "Verifica Codice 2FA" : "Login"; ?>
+            </h1>
         </div>
-    <?php elseif (!empty($messaggio_login) && $mostra_form_login): ?>
-        <div class="alert alert-danger" role="alert">
-            <?php echo htmlspecialchars($messaggio_login); ?>
+        <div id="contenitore">
+            <?php if (!empty($messaggio_output) && $mostra_form_2fa): ?>
+                <div class="alert <?php echo htmlspecialchars($classe_alert); ?>" role="alert">
+                    <?php echo htmlspecialchars($messaggio_output); ?>
+                </div>
+            <?php elseif (!empty($messaggio_login) && $mostra_form_login): ?>
+                <div class="alert alert-danger" role="alert">
+                    <?php echo htmlspecialchars($messaggio_login); ?>
+                </div>
+            <?php endif; ?>
         </div>
-    <?php endif; ?>
-
-
-    <?php if ($mostra_form_login): ?>
         <div class="d-flex align-items-center min-vh-100">
             <div class="container">
                 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
@@ -230,29 +225,99 @@ if (isset($_GET['reset_2fa']) && $_GET['reset_2fa'] == '1') {
                 </form>
             </div>
         </div>
-    <?php endif; ?>
-
-    <?php if ($mostra_form_2fa): ?>
-        <div class="form-box-container <?php echo $form_box_dynamic_class; ?>">
-            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
-                <div class="mb-3">
-                    <label for="codice_2fa_input_id" class="form-label">Codice di Verifica</label>
-                    <input type="text" class="form-control" id="codice_2fa_input_id" name="codice_2fa_input_utente"
-                        placeholder="Codice a 6 caratteri" inputmode="text" pattern="[0-9a-zA-Z]{6}"
-                        title="Inserisci il codice a 6 caratteri ricevuto via email" required autofocus>
-                </div>
-                <button class="btn btn-success w-100 py-2" type="submit" name="bottone_submit_codice_2fa">Verifica
-                    Codice</button>
-                <div class="text-center mt-3">
-                    <small><a
-                            href="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?reset_2fa=1&messaggio=Login+annullato."
-                            class="text-muted">Annulla e torna al login</a></small>
-                </div>
-                <p class="text-center mt-4 text-body-secondary">&copy; <?php echo date("Y"); ?></p>
-            </form>
-
         </div>
-    <?php endif; ?>
+    </body>
+
+    </html>
+<?php endif; ?>
+
+<?php if ($mostra_form_2fa): ?>
+
+    <!DOCTYPE html>
+    <html lang="it">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title><?php echo $mostra_form_2fa ? "Verifica Codice 2FA" : "Login"; ?></title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="index.css">
+        <style>
+            .title-wrapper {
+                width: 100%;
+                text-align: center;
+                margin-bottom: 1rem;
+            }
+
+            .form-box-container {
+                padding: 2rem;
+                background-color: white;
+                border-radius: .5rem;
+                box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
+                width: 100%;
+                max-width: 450px;
+                margin-bottom: 1rem;
+            }
+
+            #contenitore {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+            }
+
+            .alert {
+                width: 100%;
+                max-width: 450px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="title-wrapper align-items-center">
+            <h1 class="display-5 align-items-center">
+                <?php echo $mostra_form_2fa ? "Verifica Codice 2FA" : "Login"; ?>
+            </h1>
+        </div>
+        <div id="contenitore">
+            <?php if (!empty($messaggio_output) && $mostra_form_2fa): ?>
+                <div class="alert <?php echo htmlspecialchars($classe_alert); ?>" role="alert">
+                    <?php echo htmlspecialchars($messaggio_output); ?>
+                </div>
+            <?php elseif (!empty($messaggio_login) && $mostra_form_login): ?>
+                <div class="alert alert-danger" role="alert">
+                    <?php echo htmlspecialchars($messaggio_login); ?>
+                </div>
+            <?php endif; ?>
+
+
+            <div class="form-box-container <?php echo $form_box_dynamic_class; ?> d-flex align-items-center">
+                <div class="container">
+                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+                        <div class="mb-3">
+                            <label for="codice_2fa_input_id" class="form-label">Codice di Verifica</label>
+                            <input type="text" class="form-control" id="codice_2fa_input_id" name="codice_2fa_input_utente"
+                                placeholder="Codice a 6 caratteri" inputmode="text" pattern="[0-9a-zA-Z]{6}"
+                                title="Inserisci il codice a 6 caratteri ricevuto via email" required autofocus>
+                        </div>
+                        <button class="btn btn-success w-100 py-2" type="submit" name="bottone_submit_codice_2fa">Verifica
+                            Codice</button>
+                        <div class="text-center mt-3">
+                            <small><a
+                                    href="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?reset_2fa=1&messaggio=Login+annullato."
+                                    class="text-muted">Annulla e torna al login</a></small>
+                        </div>
+                        <p class="text-center mt-4 text-body-secondary">&copy; <?php echo date("Y"); ?></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </body>
+
+    </html>
+<?php endif; ?>
 
 </body>
 
