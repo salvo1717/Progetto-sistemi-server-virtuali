@@ -59,7 +59,8 @@ if (isset($_POST['bottone_submit_codice_2fa'])) {
         }
 
         unset($_SESSION['2fa_codice_salvato_in_sessione'], $_SESSION['2fa_dati_utente_per_login'], $_SESSION['2fa_timestamp_scadenza']);
-
+        header("Location: area_utente.php");
+        exit();
 
     } else {
         $messaggio_output = "Codice di verifica errato.";
